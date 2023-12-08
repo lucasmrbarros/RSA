@@ -1,57 +1,52 @@
-import random
-import math
+import hash
+import rsa
 
-#Check if the number is a prime
-def is_prime(number):
-    if number < 2:
-        return False
-    for i in range (2, number // 2+1):
-        if number % 1 == 0:
-            return False
-    return True
+public_key, private_key = rsa.key_pair()
 
-#generates the prime number
-def generate_prime(min_value, max_value):
-    prime = random.randint(min_value, max_value)
-    while not is_prime(prime):
-        prime = random.randint(min_value, max_value)
-    return prime
+print('Public Key', public_key)
+print('Private key', private_key)
 
-def mod_inverse (e, phi):
-    for d in range (3, phi):
-        if(d * e) % phi == 1:
-            return d
+menu = True
 
-p, q = generate_prime(1000, 5000), generate_prime(1000, 5000)
+while menu == True:
+    print('1 - Cifração')
+    print('2 - Decifração')
+    print('3 - Assinatura de Mensagem')
+    print('4 - Verificação de Autenticade')
+    print('5 -  Sair')
 
-#check if both of the primes aren't the same
-while p == q:
-    q = generate_prime(1000, 5000)
+    option = int(input())
 
-n = p * q
-phi_n = (p - 1) * (q -1)
+    if option == 1:
+        print('Plaintext? ')
+        message = input()
+        cypherd = rsa.encrypt(message, public_key)
+        print(cypherd)
 
-e = random.randint(3, phi_n-1)
+    elif option == 2:
+        print(rsa.decrypt(cypherd, private_key))
 
-while math.gcd(e, phi_n) != 1:
-    e = random.randint(3, phi_n -1)
+    elif option == 3:
+        print('Mensagem? ')
+        message = input()
 
-d = mod_inverse(e, phi_n)
+        message = message.encode()
+        print(hash.sign(message, private_key))
 
-print("Public key: ", e)
-print("Private key: ", d)
-print("N: ", n)
-print("Phi: ", phi_n)
-print("P: ", p)
-print("Q: ", )
+    elif option == 4:
+        print('Mensagem?')
+        message = input()
 
-message = "Hello World"
+        message = message.encode()
 
-message_encoded = [ord(c) for c in message]
+        print('Assinatura?')
+        signature = int(input())
 
-ciphertext = [pow(c, e, n) for c in message_encoded]
+        print(hash.check(message, signature, public_key))
 
-print(ciphertext)
+    elif option == 5:
+        print('Execução Finalizada')
+        menu = False
 
-message_encoded = [pow(ch, d, n) for ch in ciphertext]
-message = "".join("")
+    else:
+        print('Opção inválida')
