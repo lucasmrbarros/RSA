@@ -3,10 +3,10 @@ import hashlib
 
 
 #generate the prime number
-def prime_generator(bits):
+def prime_generator():
     while True:
-        prime = random.getrandbits(bits)
-        prime |= (1 << (bits - 1)) | 1
+        prime = random.getrandbits(1028)
+        prime |= (1 << (1028 - 1)) | 1
 
         if is_prime(prime):
             return prime
@@ -44,8 +44,8 @@ def is_prime(n, k=40):
 
 #generates the pair of keys
 def key_pair():
-    p = prime_generator(1024)
-    q = prime_generator(1024)
+    p = prime_generator()
+    q = prime_generator()
     phi_n = (p - 1) * (q - 1)
     n = p * q
     e = 65537
